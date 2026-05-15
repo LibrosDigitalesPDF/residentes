@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Residente</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="back-btn" style="display:block;"><i class="fas fa-arrow-left"></i></a>
+        <div class="header-text">
+            <h1 id="headerName">Cargando perfil...</h1>
+            <p>Ficha Individual</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="loader" class="loader-container">
+            <div class="spinner"></div>
+            <p>Sincronizando datos...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            
+            <!-- Cabecera e Imagen -->
+            <div class="resident-header">
+                <div class="image-upload-container">
+                    <img id="profileImage" src="https://via.placeholder.com/150?text=Cargando" alt="Foto">
+                    <label for="fileInput" class="upload-btn">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+                <div>
+                    <h2 id="displayName" style="color: var(--primary-color); font-size: 2rem;">Nombre</h2>
+                    <p id="displayId" style="color: var(--text-muted); font-size: 1.1rem;">Nº: -</p>
+                    <p id="imageStatus" style="font-size: 0.8rem; color: var(--secondary-color); margin-top: 5px;"></p>
+                </div>
+            </div>
+
+            <!-- Datos Personales -->
+            <div class="section">
+                <h2>Datos Personales</h2>
+                <form id="personalForm">
+                    <div class="form-grid" id="personalFields">
+                        <!-- Generado dinámicamente -->
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Cambios Personales</button>
+                    <span id="saveStatus" style="margin-left: 10px; font-size: 0.9rem;"></span>
+                </form>
+            </div>
+
+            <!-- Obra Social -->
+            <div class="section">
+                <h2>Obra Social <button class="btn btn-primary" onclick="alert('Función de agregar nueva O.S. a implementar en modal')">+ Agregar</button></h2>
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="osTable">
+                        <thead>
+                            <tr>
+                                <th>Obra Social</th><th>Nº O. Social</th><th>Nº Tramite</th><th>Médico Cabecera</th><th>Alergias</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Contactos -->
+            <div class="section">
+                <h2>Contactos Familiares <button class="btn btn-primary" onclick="alert('Función de agregar contacto a implementar en modal')">+ Agregar</button></h2>
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="contactTable">
+                        <thead>
+                            <tr>
+                                <th>Familiar Responsable</th><th>Teléfono</th><th>DNI</th><th>Domicilio</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "TU_URL_DE_APPS_SCRIPT_AQUI"; 
+    </script>
+    <script src="resident.js"></script>
+</body>
+</html>
