@@ -2,7 +2,6 @@ let allResidents = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchResidents();
-    
     document.getElementById('searchInput').addEventListener('input', (e) => {
         filterResidents(e.target.value);
     });
@@ -12,6 +11,12 @@ async function fetchResidents() {
     try {
         const response = await fetch(`${API_URL}?action=getResidentes`);
         const data = await response.json();
+        
+        if (data.error) {
+            alert("Error de Apps Script: " + data.error);
+            return;
+        }
+
         allResidents = data;
         renderGrid(allResidents);
         document.getElementById('loader').style.display = 'none';
@@ -27,21 +32,34 @@ function renderGrid(residents) {
     grid.innerHTML = '';
 
     residents.forEach(res => {
-        if(!res.Nombre) return; // Saltar filas vacías
-
         const card = document.createElement('div');
         card.className = 'card';
-        // Redirigir a resident.html pasando el nombre como parámetro
         card.onclick = () => window.location.href = `resident.html?nombre=${encodeURIComponent(res.Nombre)}`;
 
-        // Imagen por defecto si no hay URL en Sheets
-        const fotoUrl = res.FotoURL && res.FotoURL !== "" ? res.FotoURL : "https://via.placeholder.com/150?text=Sin+Foto";
+        const fotoUrl = res.FotoURL && res.FotoURL !== "" ? res.FotoURL : DEFAULT_IMAGE;
+        const fnac = res['Fecha de nacimiento'] || '-';
+        const edad = res.Edad ? `${res.Edad} años` : '-';
+        const nSocio = res['Nro de socio'] || res['Nº'] || '-';
+
+        // Procesar lista de Obras Sociales para la tarjeta
+        let osHtml = "<em>No registrada</em>";
+        if (res.listaOS && res.listaOS.length > 0) {
+            osHtml = res.listaOS.map(os => `▪ ${os.nombre} (Nº: ${os.numero || '-'})`).join('<br>');
+        }
 
         card.innerHTML = `
             <img src="${fotoUrl}" alt="Foto de ${res.Nombre}">
             <h3>${res.Nombre}</h3>
-            <p><i class="fas fa-id-card"></i> Nº: ${res['Nº']}</p>
-            <p><i class="fas fa-birthday-cake"></i> ${res.Edad} años</p>
+            
+            <p class="info-text"><strong><i class="fas fa-id-badge"></i> Nº Socio:</strong> ${nSocio}</p>
+            <p class="info-text"><strong><i class="fas fa-birthday-cake"></i> Nacimiento:</strong> ${fnac} (${edad})</p>
+            <p class="info-text"><strong><i class="fas fa-address-card"></i> DNI:</strong> ${res.DNI || '-'}</p>
+            <p class="info-text"><strong><i class="fas fa-file-medical"></i> Nº Trámite:</strong> ${res['Nº de tramite'] || '-'}</p>
+            
+            <div class="os-list">
+                <strong><i class="fas fa-hospital"></i> Obras Sociales:</strong><br>
+                ${osHtml}
+            </div>
         `;
         grid.appendChild(card);
     });
@@ -51,8 +69,10 @@ function filterResidents(searchTerm) {
     const term = searchTerm.toLowerCase();
     const filtered = allResidents.filter(res => 
         (res.Nombre && res.Nombre.toLowerCase().includes(term)) ||
-        (res.Cuil && res.Cuil.toString().includes(term)) ||
-        (res['Nº'] && res['Nº'].toString().includes(term))
+        (res.DNI && res.DNI.toString().includes(term)) ||
+        (res['Nº de tramite'] && res['Nº de tramite'].toString().includes(term)) ||
+        (res['Nro de socio'] && res['Nro de socio'].toString().includes(term)) ||
+        (res.listaOS && res.listaOS.some(os => os.nombre.toLowerCase().includes(term)))
     );
     renderGrid(filtered);
 }
