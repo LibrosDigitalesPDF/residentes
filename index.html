@@ -3,36 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Residencial Francia - Archivo</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Residencial Francia - Archivo Digital</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="header">
-        <img src="logo.png" alt="Logo Residencial Francia" class="logo" onerror="this.src='https://via.placeholder.com/100x50?text=LOGO'">
-        <div class="header-text">
-            <h1>Residencial Francia</h1>
-            <p>Archivo General de Residentes</p>
+    <!-- Header OBLIGATORIO: Azul institucional -->
+    <header class="main-header">
+        <div class="header-left">
+            <i class="fa-solid fa-house-medical logo-icon"></i>
+            <span class="logo-text">Residencial Francia</span>
+        </div>
+        <div class="header-right">
+            <h1>Archivo - Residentes</h1>
         </div>
     </header>
 
-    <main class="container">
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar residente por nombre, DNI, Nº Trámite o Nº de Socio...">
-        </div>
+    <main class="dashboard-container">
+        <!-- Controles: Buscador y Filtros -->
+        <section class="controls-section">
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por nombre o DNI...">
+            </div>
+            <div class="filter-box">
+                <select id="osFilter">
+                    <option value="">Todas las Obras Sociales</option>
+                    <!-- Llenado dinámico por JS -->
+                </select>
+                <button class="btn btn-primary" onclick="window.location.href='resident.html'"><i class="fa-solid fa-plus"></i> Nuevo Residente</button>
+            </div>
+        </section>
 
+        <!-- Spinner Loading -->
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p>Cargando archivo y vinculando datos...</p>
+            <p>Cargando archivo de residentes...</p>
         </div>
 
-        <div id="residentsGrid" class="grid" style="display: none;"></div>
+        <!-- Cuadrícula de Residentes -->
+        <section class="grid-container" id="residentsGrid">
+            <!-- Cards generadas por app.js -->
+        </section>
     </main>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyaBeXyPSGA3jZ4KzJs7fS15UVSnKADTtziiLeDLVsUl5lV7XEsHE_EupRFE0OqsmIR0g/exec"; 
-        const DEFAULT_IMAGE = "logo.jpg"; // Imagen genérica
-    </script>
-    <script src="app.js"></script>
+    <!-- Modal para Archivar -->
+    <div id="archiveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Archivar Residente</h2>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Indique la fecha de salida para mover a <strong id="archiveName"></strong> al archivo inactivo.</p>
+                <div class="form-group">
+                    <label>Fecha de Salida</label>
+                    <input type="date" id="archiveDate" class="modern-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelArchive">Cancelar</button>
+                <button class="btn btn-danger" id="confirmArchive">Archivar Residente</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
 </body>
 </html>
