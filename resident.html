@@ -3,87 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Residente</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Perfil de Residente - Residencial Francia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <header class="header">
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
-        <div class="header-text">
-            <h1>Residencial Francia</h1>
-            <p>Ficha Individual Interactiva</p>
+<body class="bg-light">
+    <header class="main-header">
+        <div class="header-left">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Volver al Inicio</a>
+        </div>
+        <div class="header-right">
+            <h1>Ficha de Residente</h1>
         </div>
     </header>
 
-    <main class="container">
-        <div id="loader" class="loader-container">
+    <main class="profile-container">
+        <!-- Notificaciones -->
+        <div id="toast" class="toast"></div>
+
+        <div class="profile-actions">
+            <button id="btnEdit" class="btn btn-secondary"><i class="fa-solid fa-pen"></i> Editar</button>
+            <button id="btnSave" class="btn btn-success hidden"><i class="fa-solid fa-save"></i> Guardar Cambios</button>
+        </div>
+
+        <div id="loader" class="loader-container hidden">
             <div class="spinner"></div>
-            <p>Sincronizando expedientes...</p>
+            <p>Procesando datos...</p>
         </div>
 
-        <div id="content" style="display: none;">
+        <form id="residentForm" class="profile-form readonly-mode">
             
-            <!-- HEADER DEL PERFIL Y BOTONES -->
-            <div class="profile-header" id="profileHeader">
-                <div class="profile-info-group">
-                    <div class="image-upload-container">
-                        <img id="profileImage" src="" alt="Foto">
-                        <label for="fileInput" class="upload-btn" title="Cambiar Foto"><i class="fas fa-camera"></i></label>
-                        <input type="file" id="fileInput" accept="image/*">
-                    </div>
-                    <div class="profile-titles">
-                        <h2 id="displayName">Cargando...</h2>
-                        <p>Nº de Socio: <span id="displaySocio">-</span></p>
-                        <span id="imageStatus" style="font-size: 0.85rem; color: var(--secondary-color);"></span>
+            <!-- SECCIÓN 1: Info Base -->
+            <section class="profile-section section-1">
+                <div class="photo-column">
+                    <div class="photo-wrapper">
+                        <img id="profileImage" src="" alt="Foto Residente">
+                        <div class="upload-overlay hidden" id="uploadOverlay">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Cambiar Foto</span>
+                            <input type="file" id="imageUpload" accept="image/*">
+                        </div>
                     </div>
                 </div>
-                <div class="profile-actions">
-                    <button id="btnEdit" class="btn btn-primary" onclick="toggleEditMode()"><i class="fas fa-pen"></i> Editar Perfil</button>
-                    <button id="btnSave" class="btn btn-success" style="display: none;" onclick="saveAllData()"><i class="fas fa-save"></i> Guardar Cambios</button>
+                <div class="info-column">
+                    <div class="form-row large-text">
+                        <div class="form-group flex-2">
+                            <label>Nombre Completo</label>
+                            <input type="text" id="nombre" name="nombre" required readonly>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>Número de Socio</label>
+                            <input type="text" id="numeroSocio" name="numeroSocio" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Fecha Nacimiento</label><input type="date" id="fechaNacimiento" name="fechaNacimiento" readonly></div>
+                        <div class="form-group"><label>Edad</label><input type="number" id="edad" name="edad" readonly></div>
+                        <div class="form-group"><label>DNI</label><input type="text" id="dni" name="dni" readonly></div>
+                        <div class="form-group"><label>CUIL</label><input type="text" id="cuil" name="cuil" readonly></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Número de Trámite</label><input type="text" id="numeroTramite" name="numeroTramite" readonly></div>
+                        <div class="form-group"><label>Lugar de Internación</label><input type="text" id="lugarInternacion" name="lugarInternacion" readonly></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width"><label>Alergias</label><input type="text" id="alergias" name="alergias" class="warning-text" readonly></div>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- SECCIÓN 1: Datos Personales y Médicos (Comunes) -->
-            <div class="section">
-                <h3>1. Datos Personales y Médicos Generales</h3>
-                <div class="form-grid" id="section1">
-                    <!-- Inyectado por JS -->
+            <!-- SECCIÓN 2: Médica -->
+            <section class="profile-section section-2">
+                <h3><i class="fa-solid fa-notes-medical"></i> Información Médica y Cobertura</h3>
+                <div class="form-row">
+                    <div class="form-group flex-2"><label>Médico de Cabecera</label><input type="text" id="medicoCabecera" name="medicoCabecera" readonly></div>
                 </div>
-            </div>
-
-            <!-- SECCIÓN 2: Obras Sociales (Lista) -->
-            <div class="section">
-                <h3>2. Información de Obras Sociales</h3>
-                <div id="section2">
-                    <!-- Inyectado por JS -->
+                
+                <div id="obrasSocialesContainer">
+                    <!-- Se inyectan filas dinámicamente -->
                 </div>
-            </div>
+                <button type="button" id="btnAddOs" class="btn btn-outline hidden"><i class="fa-solid fa-plus"></i> Añadir Obra Social</button>
+            </section>
 
-            <!-- SECCIÓN 3: Administrativo -->
-            <div class="section">
-                <h3>3. Datos Administrativos</h3>
-                <div class="form-grid" id="section3">
-                    <!-- Inyectado por JS -->
+            <!-- SECCIÓN 3: Administrativa -->
+            <section class="profile-section section-3">
+                <h3><i class="fa-solid fa-folder-open"></i> Datos Administrativos</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Fecha de Ingreso</label><input type="date" id="fechaIngreso" name="fechaIngreso" readonly></div>
+                    <div class="form-group"><label>Nacionalidad</label><input type="text" id="nacionalidad" name="nacionalidad" readonly></div>
                 </div>
-            </div>
+                <div class="form-row">
+                    <div class="form-group full-width"><label>Domicilio</label><input type="text" id="domicilio" name="domicilio" readonly></div>
+                </div>
+            </section>
 
-            <!-- SECCIÓN 4: Contactos Familiares (Solo visualización por ahora) -->
-            <div class="section">
-                <h3>4. Contactos de Emergencia</h3>
-                <table class="data-table" id="contactTable">
-                    <thead><tr><th>Familiar Responsable</th><th>Teléfono</th><th>DNI</th><th>Domicilio</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-        </div>
+            <!-- SECCIÓN 4: Contacto Responsable -->
+            <section class="profile-section section-4">
+                <h3><i class="fa-solid fa-users"></i> Contacto Responsable</h3>
+                <div class="form-row">
+                    <div class="form-group flex-2"><label>Nombre del Responsable</label><input type="text" id="responsable" name="responsable" readonly></div>
+                    <div class="form-group flex-1"><label>DNI Responsable</label><input type="text" id="dniResponsable" name="dniResponsable" readonly></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-1"><label>Teléfono</label><input type="text" id="telefono" name="telefono" readonly></div>
+                    <div class="form-group flex-2"><label>Domicilio Responsable</label><input type="text" id="domicilioResponsable" name="domicilioResponsable" readonly></div>
+                </div>
+            </section>
+        </form>
     </main>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyaBeXyPSGA3jZ4KzJs7fS15UVSnKADTtziiLeDLVsUl5lV7XEsHE_EupRFE0OqsmIR0g/exec"; 
-        const DEFAULT_IMAGE = "logo.jpg";
-    </script>
-    <script src="resident.js"></script>
+    <script src="js/resident.js"></script>
 </body>
 </html>
