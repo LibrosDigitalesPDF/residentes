@@ -9,77 +9,72 @@
 </head>
 <body>
     <header class="header">
-        <a href="index.html" class="back-btn" style="display:block;"><i class="fas fa-arrow-left"></i></a>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
         <div class="header-text">
-            <h1 id="headerName">Cargando perfil...</h1>
-            <p>Ficha Individual</p>
+            <h1>Residencial Francia</h1>
+            <p>Ficha Individual Interactiva</p>
         </div>
     </header>
 
     <main class="container">
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p>Sincronizando datos...</p>
+            <p>Sincronizando expedientes...</p>
         </div>
 
         <div id="content" style="display: none;">
             
-            <!-- Cabecera e Imagen -->
-            <div class="resident-header">
-                <div class="image-upload-container">
-                    <img id="profileImage" src="https://via.placeholder.com/150?text=Cargando" alt="Foto">
-                    <label for="fileInput" class="upload-btn">
-                        <i class="fas fa-camera"></i>
-                    </label>
-                    <input type="file" id="fileInput" accept="image/*">
-                </div>
-                <div>
-                    <h2 id="displayName" style="color: var(--primary-color); font-size: 2rem;">Nombre</h2>
-                    <p id="displayId" style="color: var(--text-muted); font-size: 1.1rem;">Nº: -</p>
-                    <p id="imageStatus" style="font-size: 0.8rem; color: var(--secondary-color); margin-top: 5px;"></p>
-                </div>
-            </div>
-
-            <!-- Datos Personales -->
-            <div class="section">
-                <h2>Datos Personales</h2>
-                <form id="personalForm">
-                    <div class="form-grid" id="personalFields">
-                        <!-- Generado dinámicamente -->
+            <!-- HEADER DEL PERFIL Y BOTONES -->
+            <div class="profile-header" id="profileHeader">
+                <div class="profile-info-group">
+                    <div class="image-upload-container">
+                        <img id="profileImage" src="" alt="Foto">
+                        <label for="fileInput" class="upload-btn" title="Cambiar Foto"><i class="fas fa-camera"></i></label>
+                        <input type="file" id="fileInput" accept="image/*">
                     </div>
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Cambios Personales</button>
-                    <span id="saveStatus" style="margin-left: 10px; font-size: 0.9rem;"></span>
-                </form>
-            </div>
-
-            <!-- Obra Social -->
-            <div class="section">
-                <h2>Obra Social <button class="btn btn-primary" onclick="alert('Función de agregar nueva O.S. a implementar en modal')">+ Agregar</button></h2>
-                <div style="overflow-x: auto;">
-                    <table class="data-table" id="osTable">
-                        <thead>
-                            <tr>
-                                <th>Obra Social</th><th>Nº O. Social</th><th>Nº Tramite</th><th>Médico Cabecera</th><th>Alergias</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <div class="profile-titles">
+                        <h2 id="displayName">Cargando...</h2>
+                        <p>Nº de Socio: <span id="displaySocio">-</span></p>
+                        <span id="imageStatus" style="font-size: 0.85rem; color: var(--secondary-color);"></span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button id="btnEdit" class="btn btn-primary" onclick="toggleEditMode()"><i class="fas fa-pen"></i> Editar Perfil</button>
+                    <button id="btnSave" class="btn btn-success" style="display: none;" onclick="saveAllData()"><i class="fas fa-save"></i> Guardar Cambios</button>
                 </div>
             </div>
 
-            <!-- Contactos -->
+            <!-- SECCIÓN 1: Datos Personales y Médicos (Comunes) -->
             <div class="section">
-                <h2>Contactos Familiares <button class="btn btn-primary" onclick="alert('Función de agregar contacto a implementar en modal')">+ Agregar</button></h2>
-                <div style="overflow-x: auto;">
-                    <table class="data-table" id="contactTable">
-                        <thead>
-                            <tr>
-                                <th>Familiar Responsable</th><th>Teléfono</th><th>DNI</th><th>Domicilio</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <h3>1. Datos Personales y Médicos Generales</h3>
+                <div class="form-grid" id="section1">
+                    <!-- Inyectado por JS -->
                 </div>
+            </div>
+
+            <!-- SECCIÓN 2: Obras Sociales (Lista) -->
+            <div class="section">
+                <h3>2. Información de Obras Sociales</h3>
+                <div id="section2">
+                    <!-- Inyectado por JS -->
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: Administrativo -->
+            <div class="section">
+                <h3>3. Datos Administrativos</h3>
+                <div class="form-grid" id="section3">
+                    <!-- Inyectado por JS -->
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: Contactos Familiares (Solo visualización por ahora) -->
+            <div class="section">
+                <h3>4. Contactos de Emergencia</h3>
+                <table class="data-table" id="contactTable">
+                    <thead><tr><th>Familiar Responsable</th><th>Teléfono</th><th>DNI</th><th>Domicilio</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
 
         </div>
@@ -87,6 +82,7 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyaBeXyPSGA3jZ4KzJs7fS15UVSnKADTtziiLeDLVsUl5lV7XEsHE_EupRFE0OqsmIR0g/exec"; 
+        const DEFAULT_IMAGE = "logo.jpg";
     </script>
     <script src="resident.js"></script>
 </body>
