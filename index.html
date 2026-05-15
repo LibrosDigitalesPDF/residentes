@@ -9,32 +9,29 @@
 </head>
 <body>
     <header class="header">
-        <!-- Reemplaza src con el logo de tu empresa -->
-        <img src="logo.jpg" alt="Logo Residencial Francia" class="logo">
+        <img src="logo.png" alt="Logo Residencial Francia" class="logo" onerror="this.src='https://via.placeholder.com/100x50?text=LOGO'">
         <div class="header-text">
             <h1>Residencial Francia</h1>
-            <p>Archivo - Residentes</p>
+            <p>Archivo General de Residentes</p>
         </div>
     </header>
 
     <main class="container">
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar residente por nombre, DNI o número...">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar residente por nombre, DNI, Nº Trámite o Nº de Socio...">
         </div>
 
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p>Cargando archivo de residentes...</p>
+            <p>Cargando archivo y vinculando datos...</p>
         </div>
 
-        <div id="residentsGrid" class="grid" style="display: none;">
-            <!-- Las tarjetas se inyectarán aquí vía JS -->
-        </div>
+        <div id="residentsGrid" class="grid" style="display: none;"></div>
     </main>
 
-    <!-- Pega AQUÍ tu URL de la Web App de Apps Script -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyaBeXyPSGA3jZ4KzJs7fS15UVSnKADTtziiLeDLVsUl5lV7XEsHE_EupRFE0OqsmIR0g/exec"; 
+        const DEFAULT_IMAGE = "logo.jpg"; // Imagen genérica
     </script>
     <script src="app.js"></script>
 </body>
