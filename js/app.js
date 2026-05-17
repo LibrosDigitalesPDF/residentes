@@ -2,7 +2,7 @@
  * APP.JS - Lógica de Dashboard Multitabs
  */
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbyaBeXyPSGA3jZ4KzJs7fS15UVSnKADTtziiLeDLVsUl5lV7XEsHE_EupRFE0OqsmIR0g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyhMXLjtTZOATMYKqGdnyBSUneNEVKqHTHzIT9R8tEyLqBEaiJXQu2q4fHK0Twsk_BPQw/exec';
 const FALLBACK_IMAGE = 'https://placehold.co/200x200/0A3D91/FFFFFF/png?text=Sin+Foto';
 
 let globalActivos = [];
