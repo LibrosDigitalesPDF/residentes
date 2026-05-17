@@ -32,13 +32,15 @@
             <p>Procesando datos...</p>
         </div>
 
-        <form id="residentForm" class="profile-form readonly-mode">
+        <!-- AQUÍ ESTÁ EL BLINDAJE CONTRA EL GHOST RELOAD -->
+        <form id="residentForm" class="profile-form readonly-mode" onsubmit="event.preventDefault();">
             
             <!-- SECCIÓN 1: Info Base -->
             <section class="profile-section section-1">
                 <div class="photo-column">
                     <div class="photo-wrapper">
-                        <img id="profileImage" src="" alt="Foto Residente">
+                        <!-- AQUÍ ESTÁ LA IMAGEN GENÉRICA DE RESPALDO -->
+                        <img id="profileImage" src="" alt="Foto Residente" onerror="this.src='https://placehold.co/200x200/0A3D91/FFFFFF/png?text=Sin+Foto'">
                         <div class="upload-overlay hidden" id="uploadOverlay">
                             <i class="fa-solid fa-camera"></i>
                             <span>Cambiar Foto</span>
