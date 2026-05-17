@@ -52,17 +52,17 @@ function renderGrid(data) {
     }
 
     data.forEach(res => {
-        // Usamos un div genérico blindado
+        // Usamos un div genérico blindado contra recargas
         const card = document.createElement('div');
         card.className = 'card';
         card.style.cursor = 'pointer'; 
         
         // Lógica de clic ultra-estricta
         card.onclick = function(e) {
-            e.preventDefault(); // 🛑 Mata cualquier recarga fantasma
-            e.stopPropagation(); // 🛑 Evita que el clic se propague al fondo
+            e.preventDefault(); 
+            e.stopPropagation(); 
 
-            // Si clicaron en archivar, solo abre el modal
+            // Si clicaron en archivar, solo abre el modal y frena todo
             if(e.target.closest('.btn-archive-card')) {
                 openArchiveModal(res.nombre);
                 return;
@@ -105,6 +105,8 @@ function renderGrid(data) {
         `;
         grid.appendChild(card);
     });
+}
+
 // ================= FILTROS Y BÚSQUEDA =================
 function populateFilters(data) {
     const select = document.getElementById('osFilter');
