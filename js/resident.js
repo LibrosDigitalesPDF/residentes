@@ -1,221 +1,222 @@
-const urlParams = new URLSearchParams(window.location.search);
-const residentName = urlParams.get('nombre');
-let isEditing = false;
-let globalData = null;
+/**
+ * RESIDENT.JS - Lógica de Perfil (VERSIÓN SEGURA ANTI-REDIRECCIÓN)
+ */
+
+const API_URL = 'https://script.google.com/macros/s/AKfycbyaBeXyPSGA3jZ4KzJs7fS15UVSnKADTtziiLeDLVsUl5lV7XEsHE_EupRFE0OqsmIR0g/exec';
+const FALLBACK_IMAGE = 'https://placehold.co/200x200/0A3D91/FFFFFF/png?text=Sin+Foto';
+
+let currentResidentName = new URLSearchParams(window.location.search).get('id');
+let isEditMode = false;
+let base64ImageToUpload = null;
+let currentFotoUrl = '';
 
 document.addEventListener('DOMContentLoaded', () => {
-    if(!residentName) { window.location.href = 'index.html'; return; }
-    fetchResidentDetails();
-    setupImageUpload();
+    // Interceptamos cualquier intento de navegación accidental por consola
+    window.onbeforeunload = null;
+
+    if (currentResidentName) {
+        loadResidentData();
+    } else {
+        toggleEditMode(true);
+        addOsRow('', '');
+        document.getElementById('profileImage').src = FALLBACK_IMAGE;
+    }
+    setupFormEvents();
 });
 
-async function fetchResidentDetails() {
-    try {
-        const response = await fetch(`${API_URL}?action=getResidentDetails&nombre=${encodeURIComponent(residentName)}`);
-        const data = await response.json();
-        globalData = data;
-        renderProfile(data);
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-    } catch (error) {
-        console.error(error);
-        alert("Error al cargar los datos del residente.");
-    }
-}
-
-// Función Helper para crear inputs
-function createInputGroup(label, id, value, readonlyForever = false) {
-    const safeValue = value || '';
-    const readAttr = readonlyForever ? 'readonly disabled title="Campo automático"' : 'readonly';
-    return `
-        <div class="form-group">
-            <label>${label}</label>
-            <input type="text" id="${id}" class="data-input" value="${safeValue}" ${readAttr}>
-        </div>
-    `;
-}
-
-function renderProfile(data) {
-    const res = data.residente;
-    const osComunes = data.obraSocialData.comunes;
-    const osLista = data.obraSocialData.lista;
-
-    // Header
-    document.getElementById('displayName').innerText = res.Nombre;
-    document.getElementById('displaySocio').innerText = res['Nro de socio'] || res['Nº'] || '-';
-    document.getElementById('profileImage').src = (res.FotoURL && res.FotoURL !== "") ? res.FotoURL : DEFAULT_IMAGE;
-
-    // SECCIÓN 1: Personales y Médicos Comunes
-    document.getElementById('section1').innerHTML = 
-        createInputGroup('Fecha de nacimiento', 'inp_fnac', res['Fecha de nacimiento']) +
-        createInputGroup('Edad', 'inp_edad', res.Edad, true) +
-        createInputGroup('DNI', 'inp_dni', osComunes['DNI']) +
-        createInputGroup('CUIL', 'inp_cuil', res.Cuil) +
-        createInputGroup('Nº de Trámite', 'inp_tramite', osComunes['Nº de tramite']) +
-        createInputGroup('Alergias', 'inp_alergias', osComunes['Alergias']) +
-        createInputGroup('Lugar de Internación', 'inp_internacion', osComunes['Lugar de internacion']);
-
-    // SECCIÓN 2: Obras Sociales (Dinámico según cantidad)
-    let osHtml = '';
-    if (osLista.length === 0) {
-        osHtml = '<p style="color:var(--text-muted);">No tiene obras sociales registradas.</p>';
-    } else {
-        osLista.forEach((os, index) => {
-            osHtml += `
-            <div class="os-card form-grid">
-                ${createInputGroup(`Obra Social ${index+1}`, `inp_os_nombre_${index}`, os['Obra Social'])}
-                ${createInputGroup('Nº Obra Social', `inp_os_num_${index}`, os['Nº O. Social'])}
-                ${createInputGroup('Médico de Cabecera', `inp_os_medico_${index}`, os['Medico de Cabecera'])}
-            </div>`;
-        });
-    }
-    document.getElementById('section2').innerHTML = osHtml;
-
-    // SECCIÓN 3: Administrativos
-    document.getElementById('section3').innerHTML = 
-        createInputGroup('Fecha de Ingreso', 'inp_ingreso', res['Fecha de ingreso']) +
-        createInputGroup('Nacionalidad', 'inp_nacionalidad', res.Nacionalidad) +
-        createInputGroup('Domicilio', 'inp_domicilio', res.Domicilio);
-
-    // SECCIÓN 4: Contactos
-    const contTbody = document.querySelector('#contactTable tbody');
-    contTbody.innerHTML = '';
-    data.contactos.forEach(cont => {
-        contTbody.innerHTML += `
-            <tr>
-                <td>${cont['Familiar Responsable'] || '-'}</td>
-                <td>${cont['Teléfono'] || '-'}</td>
-                <td>${cont['DNI del Responsable'] || '-'}</td>
-                <td>${cont['Domicilio del Responsable'] || '-'}</td>
-            </tr>`;
-    });
-}
-
-// Control del Modo Edición
-function toggleEditMode() {
-    isEditing = !isEditing;
-    const header = document.getElementById('profileHeader');
-    const inputs = document.querySelectorAll('.data-input:not([disabled])'); // Selecciona inputs que no sean la Edad
-    
-    if (isEditing) {
-        header.classList.add('edit-mode');
-        document.getElementById('btnEdit').style.display = 'none';
-        document.getElementById('btnSave').style.display = 'flex';
-        inputs.forEach(inp => inp.removeAttribute('readonly'));
-    } else {
-        header.classList.remove('edit-mode');
-        document.getElementById('btnEdit').style.display = 'flex';
-        document.getElementById('btnSave').style.display = 'none';
-        inputs.forEach(inp => inp.setAttribute('readonly', true));
-    }
-}
-
-// Guardar Todos los Datos
-async function saveAllData() {
-    const btnSave = document.getElementById('btnSave');
-    btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-    btnSave.disabled = true;
-
-    // 1. Recolectar datos de "Residentes"
-    const dataResidentes = {
-        'Fecha de nacimiento': document.getElementById('inp_fnac').value,
-        'Cuil': document.getElementById('inp_cuil').value,
-        'Fecha de ingreso': document.getElementById('inp_ingreso').value,
-        'Nacionalidad': document.getElementById('inp_nacionalidad').value,
-        'Domicilio': document.getElementById('inp_domicilio').value
-    };
-
-    // 2. Recolectar datos comunes de "Obra Social"
-    const dataOsComunes = {
-        'DNI': document.getElementById('inp_dni').value,
-        'Nº de tramite': document.getElementById('inp_tramite').value,
-        'Alergias': document.getElementById('inp_alergias').value,
-        'Lugar de internacion': document.getElementById('inp_internacion').value
-    };
-
-    // 3. Recolectar lista específica de "Obra Social"
-    const dataOsLista = [];
-    globalData.obraSocialData.lista.forEach((_, index) => {
-        dataOsLista.push({
-            'Obra Social': document.getElementById(`inp_os_nombre_${index}`).value,
-            'Nº O. Social': document.getElementById(`inp_os_num_${index}`).value,
-            'Medico de Cabecera': document.getElementById(`inp_os_medico_${index}`).value
-        });
-    });
-
-    const payload = {
-        action: 'updateResidente',
-        payload: {
-            NombreOriginal: residentName,
-            residentes: dataResidentes,
-            osComunes: dataOsComunes,
-            osLista: dataOsLista
-        }
-    };
+async function loadResidentData() {
+    const loader = document.getElementById('loader');
+    loader.classList.remove('hidden');
 
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(payload)
-        });
-        
+        const response = await fetch(`${API_URL}?action=getResidents`);
         const result = await response.json();
-        if(result.success) {
-            btnSave.innerHTML = '<i class="fas fa-check"></i> ¡Guardado!';
-            btnSave.classList.replace('btn-success', 'btn-primary');
-            setTimeout(() => {
-                btnSave.classList.replace('btn-primary', 'btn-success');
-                btnSave.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
-                btnSave.disabled = false;
-                toggleEditMode(); // Volver a modo lectura
-            }, 2000);
-        } else {
-            throw new Error(result.error);
+
+        if (result.status === 'success') {
+            const resident = result.data.find(r => r.nombre === currentResidentName);
+            if(resident) populateForm(resident);
+            else showToast("Residente no encontrado en la base de datos", true);
         }
     } catch (error) {
-        alert("Error al guardar: " + error);
-        btnSave.innerHTML = '<i class="fas fa-save"></i> Intentar de nuevo';
-        btnSave.disabled = false;
+        showToast("Error de conexión al cargar", true);
+        console.error(error);
+    } finally {
+        loader.classList.add('hidden');
     }
 }
 
-// Subida de imagen
-function setupImageUpload() {
-    const fileInput = document.getElementById('fileInput');
-    const statusText = document.getElementById('imageStatus');
-    const imgEl = document.getElementById('profileImage');
-
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        statusText.innerText = "Subiendo imagen a Drive...";
-        statusText.style.color = "#ed8936";
-        const reader = new FileReader();
-
-        reader.onload = async function(event) {
-            imgEl.src = event.target.result; // Vista previa inmediata
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({ action: 'uploadImage', nombre: residentName, base64: event.target.result, mimeType: file.type, fileName: file.name })
-                });
-
-                const result = await response.json();
-                if(result.success) {
-                    statusText.innerText = "¡Imagen guardada!";
-                    statusText.style.color = "var(--success)";
-                    setTimeout(() => statusText.innerText = "", 3000);
-                } else throw new Error(result.error);
-            } catch (error) {
-                statusText.innerText = "Error al subir.";
-                statusText.style.color = "red";
-                console.error(error);
-            }
-        };
-        reader.readAsDataURL(file);
+function populateForm(data) {
+    document.getElementById('nombre').value = data.nombre;
+    document.getElementById('numeroSocio').value = data.numeroSocio || '';
+    document.getElementById('fechaNacimiento').value = formatToInputDate(data.fechaNacimiento);
+    document.getElementById('edad').value = data.edad || '';
+    document.getElementById('dni').value = data.dni || '';
+    document.getElementById('cuil').value = data.cuil || '';
+    document.getElementById('numeroTramite').value = data.numeroTramite || '';
+    document.getElementById('lugarInternacion').value = data.lugarInternacion || '';
+    document.getElementById('alergias').value = data.alergias || '';
+    document.getElementById('medicoCabecera').value = data.medicoCabecera || '';
+    
+    const container = document.getElementById('obrasSocialesContainer');
+    container.innerHTML = '';
+    data.obrasSociales.forEach((os, index) => {
+        addOsRow(os, data.numerosOs[index]);
     });
+
+    document.getElementById('fechaIngreso').value = formatToInputDate(data.fechaIngreso);
+    document.getElementById('nacionalidad').value = data.nacionalidad || '';
+    document.getElementById('domicilio').value = data.domicilio || '';
+    document.getElementById('responsable').value = data.responsable || '';
+    document.getElementById('dniResponsable').value = data.dniResponsable || '';
+    document.getElementById('telefono').value = data.telefono || '';
+    document.getElementById('domicilioResponsable').value = data.domicilioResponsable || '';
+
+    currentFotoUrl = data.fotoUrl;
+    document.getElementById('profileImage').src = (data.fotoUrl && data.fotoUrl !== '') ? data.fotoUrl : FALLBACK_IMAGE;
+}
+
+function formatToInputDate(sheetDate) {
+    if(!sheetDate) return '';
+    try {
+        if(sheetDate.includes('/')) {
+            const parts = sheetDate.split('/');
+            return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+        }
+        return new Date(sheetDate).toISOString().split('T')[0];
+    } catch { return sheetDate; }
+}
+
+function setupFormEvents() {
+    document.getElementById('btnEdit').onclick = (e) => { e.preventDefault(); toggleEditMode(true); };
+    document.getElementById('btnSave').onclick = (e) => { e.preventDefault(); saveResident(); };
+    document.getElementById('btnAddOs').onclick = (e) => { e.preventDefault(); addOsRow('', ''); };
+    
+    document.getElementById('imageUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('profileImage').src = event.target.result;
+                base64ImageToUpload = { base64: event.target.result, mimeType: file.type };
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+function toggleEditMode(enable) {
+    isEditMode = enable;
+    const form = document.getElementById('residentForm');
+    const inputs = form.querySelectorAll('input');
+    
+    if (enable) {
+        form.classList.remove('readonly-mode');
+        inputs.forEach(input => input.removeAttribute('readonly'));
+        document.getElementById('btnEdit').classList.add('hidden');
+        document.getElementById('btnSave').classList.remove('hidden');
+        document.getElementById('btnAddOs').classList.remove('hidden');
+        document.getElementById('uploadOverlay').classList.remove('hidden');
+        document.querySelectorAll('.btn-remove-os').forEach(btn => btn.classList.remove('hidden'));
+    } else {
+        form.classList.add('readonly-mode');
+        inputs.forEach(input => input.setAttribute('readonly', 'true'));
+        document.getElementById('btnEdit').classList.remove('hidden');
+        document.getElementById('btnSave').classList.add('hidden');
+        document.getElementById('btnAddOs').classList.add('hidden');
+        document.getElementById('uploadOverlay').classList.add('hidden');
+        document.querySelectorAll('.btn-remove-os').forEach(btn => btn.classList.add('hidden'));
+    }
+}
+
+function addOsRow(osValue, nroValue) {
+    const container = document.getElementById('obrasSocialesContainer');
+    const row = document.createElement('div');
+    row.className = 'os-row';
+    row.innerHTML = `
+        <div class="form-group flex-1">
+            <label>Obra Social</label>
+            <input type="text" class="os-name" value="${osValue}" ${!isEditMode ? 'readonly' : ''}>
+        </div>
+        <div class="form-group flex-1">
+            <label>N° Obra Social</label>
+            <input type="text" class="os-number" value="${nroValue}" ${!isEditMode ? 'readonly' : ''}>
+        </div>
+        <button type="button" class="btn-remove-os ${!isEditMode ? 'hidden' : ''}" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>
+    `;
+    container.appendChild(row);
+}
+
+async function saveResident() {
+    const btnSave = document.getElementById('btnSave');
+    const loader = document.getElementById('loader');
+    
+    const nombreInput = document.getElementById('nombre').value.trim();
+    if(!nombreInput) { showToast("El Nombre Completo es obligatorio", true); return; }
+
+    btnSave.disabled = true;
+    loader.classList.remove('hidden');
+
+    try {
+        let finalFotoUrl = currentFotoUrl;
+        if (base64ImageToUpload) {
+            const imgPayload = { action: 'uploadImage', payload: { nombre: nombreInput, base64: base64ImageToUpload.base64, mimeType: base64ImageToUpload.mimeType } };
+            const imgRes = await fetch(API_URL, { method: 'POST', body: JSON.stringify(imgPayload) });
+            const imgData = await imgRes.json();
+            if(imgData.status === 'success') finalFotoUrl = imgData.data.url;
+        }
+
+        const osNames = Array.from(document.querySelectorAll('.os-name')).map(el => el.value.trim());
+        const osNumbers = Array.from(document.querySelectorAll('.os-number')).map(el => el.value.trim());
+
+        const residentData = {
+            nombreViejo: currentResidentName, 
+            nombre: nombreInput,
+            numeroSocio: document.getElementById('numeroSocio').value,
+            fechaNacimiento: document.getElementById('fechaNacimiento').value,
+            edad: document.getElementById('edad').value,
+            dni: document.getElementById('dni').value,
+            cuil: document.getElementById('cuil').value,
+            numeroTramite: document.getElementById('numeroTramite').value,
+            lugarInternacion: document.getElementById('lugarInternacion').value,
+            alergias: document.getElementById('alergias').value,
+            medicoCabecera: document.getElementById('medicoCabecera').value,
+            obrasSociales: osNames,
+            numerosOs: osNumbers,
+            fechaIngreso: document.getElementById('fechaIngreso').value,
+            nacionalidad: document.getElementById('nacionalidad').value,
+            domicilio: document.getElementById('domicilio').value,
+            responsable: document.getElementById('responsable').value,
+            dniResponsable: document.getElementById('dniResponsable').value,
+            telefono: document.getElementById('telefono').value,
+            domicilioResponsable: document.getElementById('domicilioResponsable').value,
+            fotoUrl: finalFotoUrl
+        };
+
+        const postData = { action: 'saveResident', payload: residentData };
+        const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(postData) });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            showToast("Guardado correctamente");
+            currentResidentName = nombreInput;
+            currentFotoUrl = finalFotoUrl;
+            base64ImageToUpload = null;
+            toggleEditMode(false);
+            window.history.replaceState({}, '', `resident.html?id=${encodeURIComponent(nombreInput)}`);
+        } else {
+            showToast("Error: " + result.message, true);
+        }
+    } catch (error) {
+        showToast("Error al guardar", true);
+    } finally {
+        btnSave.disabled = false;
+        loader.classList.add('hidden');
+    }
+}
+
+function showToast(message, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast show ' + (isError ? 'error' : '');
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
