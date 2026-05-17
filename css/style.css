@@ -84,7 +84,7 @@ select { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
 .card { background: var(--white); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm); transition: var(--transition); display: flex; flex-direction: column; gap: 15px; position: relative; border-top: 4px solid var(--primary-blue); }
 .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-.card.archived-card { border-top-color: var(--text-muted); opacity: 0.9; filter: grayscale(20%); } /* Estilo para archivados */
+.card.archived-card { border-top-color: var(--text-muted); opacity: 0.9; filter: grayscale(20%); }
 .card-header { display: flex; gap: 15px; align-items: center; }
 .card-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
 .card-title h3 { font-size: 1.2rem; color: var(--text-main); margin-bottom: 5px; }
@@ -92,10 +92,11 @@ select { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 
 .card-body { border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; flex-direction: column; gap: 8px; }
 .info-row { display: flex; justify-content: space-between; font-size: 0.9rem; }
 
-/* NUEVO: Bloque de Obras Sociales en la Tarjeta */
-.os-block { background: #E1F0FF; padding: 8px 12px; border-radius: var(--radius-md); display: flex; flex-direction: column; border-left: 3px solid var(--primary-blue); }
-.os-block .os-name { font-weight: 700; color: var(--primary-blue); font-size: 0.85rem; }
-.os-block .os-number { font-size: 0.8rem; color: var(--text-main); font-family: monospace; font-weight: 600; margin-top: 2px; }
+/* ======== BLOQUE DE OBRA SOCIAL EN TARJETA (NUEVO DISEÑO) ======== */
+.os-block { background: #E1F0FF; padding: 12px 15px; border-radius: var(--radius-md); display: flex; flex-direction: column; border-left: 4px solid var(--primary-blue); margin-top: 5px; }
+.os-block .os-name { font-weight: 700; color: var(--primary-blue); font-size: 0.95rem; margin-bottom: 5px; }
+.os-block .os-number { font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; }
+.os-block .os-number strong { font-size: 1.25rem; color: var(--text-main); font-family: monospace; margin-top: 2px; letter-spacing: 0.5px; }
 
 .btn-archive-card { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-muted); cursor: pointer; transition: var(--transition); font-size: 1.2rem; }
 .btn-archive-card:hover { color: var(--danger); }
