@@ -92,7 +92,7 @@ function renderGrid(data, containerId, isArchived) {
             window.location.href = `resident.html?id=${encodeURIComponent(res.nombre)}`;
         };
 
-        // BLOQUE: Obra Social + Nro Obra Social
+        // BLOQUE: Obra Social + Nro Obra Social (Actualizado)
         let osBlocksHtml = '';
         res.obrasSociales.forEach((os, idx) => {
             if (os && os.trim() !== '') {
@@ -100,7 +100,7 @@ function renderGrid(data, containerId, isArchived) {
                 osBlocksHtml += `
                     <div class="os-block">
                         <span class="os-name">${os}</span>
-                        <span class="os-number">N° OS: ${nro}</span>
+                        <span class="os-number">Nro Obra Social: <strong>${nro}</strong></span>
                     </div>
                 `;
             }
@@ -135,7 +135,7 @@ function renderGrid(data, containerId, isArchived) {
     });
 }
 
-// ================= CALENDARIO DE CUMPLEAÑOS =================
+// ================= CALENDARIO DE CUMPLEAÑOS (Cálculo de Edad) =================
 function renderCalendar(residentesActivos) {
     const today = new Date();
     const year = today.getFullYear();
@@ -157,28 +157,34 @@ function renderCalendar(residentesActivos) {
         daysContainer.appendChild(emptyCell);
     }
 
-    // Identificar cumpleaños de este mes
+    // Identificar cumpleaños de este mes y calcular edad
     const monthBirthdays = {};
     residentesActivos.forEach(res => {
         if(res.fechaNacimiento) {
-            let bMonth, bDay;
+            let bMonth, bDay, bYear;
+            
             if(res.fechaNacimiento.includes('/')) {
                 const parts = res.fechaNacimiento.split('/');
                 bDay = parseInt(parts[0], 10);
                 bMonth = parseInt(parts[1], 10) - 1;
+                bYear = parseInt(parts[2], 10);
             } else if (res.fechaNacimiento.includes('-')) {
                 const parts = res.fechaNacimiento.split('-');
-                bDay = parseInt(parts[2], 10);
+                bYear = parseInt(parts[0], 10);
                 bMonth = parseInt(parts[1], 10) - 1;
+                bDay = parseInt(parts[2], 10);
             } else {
                 const d = new Date(res.fechaNacimiento);
                 bDay = d.getDate();
                 bMonth = d.getMonth();
+                bYear = d.getFullYear();
             }
 
             if(bMonth === month) {
                 if(!monthBirthdays[bDay]) monthBirthdays[bDay] = [];
-                monthBirthdays[bDay].push(res.nombre);
+                // Calcular cuántos años cumple
+                const edadQueCumple = year - bYear;
+                monthBirthdays[bDay].push({ nombre: res.nombre, edad: edadQueCumple });
             }
         }
     });
@@ -194,9 +200,10 @@ function renderCalendar(residentesActivos) {
         
         if (monthBirthdays[i]) {
             dayCell.classList.add('has-birthday');
-            monthBirthdays[i].forEach(name => {
-                const shortName = name.split(' ').slice(0,2).join(' ');
-                html += `<span class="birthday-item"><i class="fa-solid fa-cake-candles"></i> ${shortName}</span>`;
+            monthBirthdays[i].forEach(person => {
+                const shortName = person.nombre.split(' ').slice(0,2).join(' ');
+                // Mostrar nombre y edad que cumple
+                html += `<span class="birthday-item"><i class="fa-solid fa-cake-candles"></i> ${shortName} (${person.edad} años)</span>`;
             });
         }
 
