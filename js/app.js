@@ -52,21 +52,24 @@ function renderGrid(data) {
     }
 
     data.forEach(res => {
-        // Volvemos al div para evitar comportamientos por defecto del navegador
+        // Usamos un div genérico blindado
         const card = document.createElement('div');
         card.className = 'card';
-        card.style.cursor = 'pointer'; // Para que el mouse se vea como una manito
+        card.style.cursor = 'pointer'; 
         
-        // Asignamos la navegación exclusivamente por JavaScript
+        // Lógica de clic ultra-estricta
         card.onclick = function(e) {
-            // Si hacen clic en el botón archivar, frenamos la redirección
+            e.preventDefault(); // 🛑 Mata cualquier recarga fantasma
+            e.stopPropagation(); // 🛑 Evita que el clic se propague al fondo
+
+            // Si clicaron en archivar, solo abre el modal
             if(e.target.closest('.btn-archive-card')) {
-                e.preventDefault();
-                e.stopPropagation();
+                openArchiveModal(res.nombre);
                 return;
             }
-            // El "./" fuerza al navegador a buscar en la misma carpeta exacta
-            window.location.assign(`./resident.html?id=${encodeURIComponent(res.nombre)}`);
+            
+            // Si fue en la tarjeta, viaja al perfil
+            window.location.href = `resident.html?id=${encodeURIComponent(res.nombre)}`;
         };
 
         const osTags = res.obrasSociales.map(os => 
@@ -75,9 +78,8 @@ function renderGrid(data) {
 
         const imgSrc = res.fotoUrl && res.fotoUrl !== '' ? res.fotoUrl : FALLBACK_IMAGE;
 
-        // Limpiamos el botón de archivar para que solo dispare su modal
         card.innerHTML = `
-            <button class="btn-archive-card" title="Archivar Residente" onclick="openArchiveModal('${res.nombre}')">
+            <button type="button" class="btn-archive-card" title="Archivar Residente">
                 <i class="fa-solid fa-box-archive"></i>
             </button>
             <div class="card-header">
@@ -103,7 +105,6 @@ function renderGrid(data) {
         `;
         grid.appendChild(card);
     });
-}
 // ================= FILTROS Y BÚSQUEDA =================
 function populateFilters(data) {
     const select = document.getElementById('osFilter');
