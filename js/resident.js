@@ -2,7 +2,7 @@
  * RESIDENT.JS - Lógica de Perfil (VERSIÓN SEGURA ANTI-REDIRECCIÓN)
  */
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxj6MkJj1HGKh3hcPFTzPBYZ-uMBtepQ3sYq0Pacx_OeONpFNBgnzv07OaCZ2ZR_m7Tzw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxLw9c7kFEB-HOfV_DJ_urMtoP4b8ye8k3E1IR95BfdlsntCDa9G3FOoPHu3XvDrsUyyg/exec';
 const FALLBACK_IMAGE = 'https://placehold.co/200x200/0A3D91/FFFFFF/png?text=Sin+Foto';
 
 let currentResidentName = new URLSearchParams(window.location.search).get('id');
