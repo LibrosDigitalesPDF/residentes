@@ -40,6 +40,15 @@ body { background-color: var(--bg-main); color: var(--text-main); line-height: 1
 .header-left { display: flex; align-items: center; gap: 10px; }
 .logo-icon { font-size: 1.8rem; }
 .logo-text { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+
+/* AQUÍ VA EL CÓDIGO DEL LOGO NUEVO */
+.custom-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+/* ================================= */
+
 .header-right h1 { font-size: 1.1rem; font-weight: 300; opacity: 0.9; }
 .back-link { color: var(--white); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 8px; transition: var(--transition); }
 .back-link:hover { opacity: 0.8; }
