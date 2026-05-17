@@ -52,24 +52,20 @@ function renderGrid(data) {
     }
 
     data.forEach(res => {
-        // Crear Card
-        const card = document.createElement('div');
+        // SOLUCIÓN 1: Usar una etiqueta <a> con la ruta correcta a resident.html
+        const card = document.createElement('a');
         card.className = 'card';
-        card.onclick = (e) => {
-            if(!e.target.closest('.btn-archive-card')) {
-                window.location.href = `resident.html?id=${encodeURIComponent(res.nombre)}`;
-            }
-        };
-
-        // Generar tags de Obras Sociales (manejando múltiples)
+        card.href = `resident.html?id=${encodeURIComponent(res.nombre)}`;
+        
         const osTags = res.obrasSociales.map(os => 
             os ? `<span class="tag">${os}</span>` : ''
         ).join('');
 
         const imgSrc = res.fotoUrl && res.fotoUrl !== '' ? res.fotoUrl : FALLBACK_IMAGE;
 
+        // SOLUCIÓN 2: event.preventDefault() y stopPropagation() en el botón archivar
         card.innerHTML = `
-            <button class="btn-archive-card" title="Archivar Residente" onclick="openArchiveModal('${res.nombre}')">
+            <button class="btn-archive-card" title="Archivar Residente" onclick="event.preventDefault(); event.stopPropagation(); openArchiveModal('${res.nombre}')">
                 <i class="fa-solid fa-box-archive"></i>
             </button>
             <div class="card-header">
@@ -96,7 +92,6 @@ function renderGrid(data) {
         grid.appendChild(card);
     });
 }
-
 // ================= FILTROS Y BÚSQUEDA =================
 function populateFilters(data) {
     const select = document.getElementById('osFilter');
