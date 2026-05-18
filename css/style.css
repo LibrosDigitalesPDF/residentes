@@ -168,4 +168,49 @@ select { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 
     .calendar-days, .calendar-weekdays { grid-template-columns: repeat(7, minmax(40px, 1fr)); }
     .day-cell { min-height: 80px; padding: 5px; }
     .birthday-item { font-size: 0.65rem; padding: 2px; }
+
+/* ======== BLOQUES DINÁMICOS DE RESPONSABLES ======== */
+.responsables-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.responsable-block {
+    position: relative;
+    background: var(--bg-main);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.responsable-block:hover {
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Botón flotante para eliminar contacto */
+.btn-remove-resp {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--danger);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    z-index: 10;
+}
+
+.btn-remove-resp:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
 }
