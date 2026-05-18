@@ -3,7 +3,7 @@
  */
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbxLw9c7kFEB-HOfV_DJ_urMtoP4b8ye8k3E1IR95BfdlsntCDa9G3FOoPHu3XvDrsUyyg/exec';
-const FALLBACK_IMAGE = 'https://placehold.co/200x200/0A3D91/FFFFFF/png?text=Sin+Foto';
+const FALLBACK_IMAGE = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
 let globalActivos = [];
 let globalArchivados = [];
