@@ -212,17 +212,15 @@ function addOsRow(osValue, nroValue) {
     container.appendChild(row);
 }
 
-// NUEVA FUNCIÓN: Agrega bloques completos para los responsables
 function addResponsableRow(nombreVal, dniVal, telVal, domVal) {
     const container = document.getElementById('responsablesContainer');
     if (!container) return;
 
     const row = document.createElement('div');
-    row.className = 'responsable-block';
-    row.style.cssText = 'position: relative; background: var(--bg-main); padding: 15px; border-radius: var(--radius-md); margin-bottom: 15px; border: 1px solid var(--border-color);';
+    row.className = 'responsable-block'; // Usa el estilo de style.css
     
     row.innerHTML = `
-        <button type="button" class="btn-remove-resp ${!isEditMode ? 'hidden' : ''}" onclick="this.closest('.responsable-block').remove()" style="position: absolute; top: 10px; right: 10px; background: var(--danger); color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; z-index: 10;"><i class="fa-solid fa-trash"></i></button>
+        <button type="button" class="btn-remove-resp ${!isEditMode ? 'hidden' : ''}" onclick="this.closest('.responsable-block').remove()" title="Quitar Responsable"><i class="fa-solid fa-trash"></i></button>
         <div class="form-row" style="margin-right: 40px;">
             <div class="form-group flex-2">
                 <label>Nombre del Contacto / Responsable</label>
