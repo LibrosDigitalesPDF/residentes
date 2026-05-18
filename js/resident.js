@@ -294,7 +294,12 @@ async function saveResident() {
             fechaIngreso: document.getElementById('fechaIngreso').value,
             nacionalidad: document.getElementById('nacionalidad').value,
             
-            // Enviamos el primer responsable como titular por retrocompatibilidad backend
+            // Enviamos las listas completas de responsables al backend
+            responsablesList: respNames,
+            dniResponsablesList: respDnis,
+            telefonosList: respTels,
+            domicilioResponsablesList: respDoms,
+            // Mantenemos estos campos individuales vacíos o con el primero para evitar errores
             responsable: respNames[0] || '',
             dniResponsable: respDnis[0] || '',
             telefono: respTels[0] || '',
