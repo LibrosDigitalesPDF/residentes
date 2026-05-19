@@ -177,14 +177,14 @@ function toggleEditMode(enable) {
         document.getElementById('btnSave').classList.remove('hidden');
         if(document.getElementById('btnAddOs')) document.getElementById('btnAddOs').classList.remove('hidden');
         if(document.getElementById('btnAddResponsable')) document.getElementById('btnAddResponsable').classList.remove('hidden');
-        document.getElementById('uploadOverlay').classList.remove('hidden');
+        document.getElementById('btnUploadContainer').classList.remove('hidden');
         document.querySelectorAll('.btn-remove-os').forEach(btn => btn.classList.remove('hidden'));
         document.querySelectorAll('.btn-remove-resp').forEach(btn => btn.classList.remove('hidden'));
     } else {
         form.classList.add('readonly-mode');
         inputs.forEach(input => input.setAttribute('readonly', 'true'));
         document.getElementById('btnEdit').classList.remove('hidden');
-        document.getElementById('btnSave').classList.add('hidden');
+        document.getElementById('btnUploadContainer').classList.add('hidden');
         if(document.getElementById('btnAddOs')) document.getElementById('btnAddOs').classList.add('hidden');
         if(document.getElementById('btnAddResponsable')) document.getElementById('btnAddResponsable').classList.add('hidden');
         document.getElementById('uploadOverlay').classList.add('hidden');
