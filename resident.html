@@ -67,20 +67,19 @@
                             <input type="text" id="numeroSocio" name="numeroSocio" readonly>
                         </div>
                     </div>
+                    <!-- Todo en una sola línea -->
                     <div class="form-row">
-                        <div class="form-group"><label>Fecha Nacimiento</label><input type="date" id="fechaNacimiento" name="fechaNacimiento" readonly></div>
-                        <div class="form-group"><label>Edad</label><input type="number" id="edad" name="edad" readonly></div>
-                        <div class="form-group"><label>DNI</label><input type="text" id="dni" name="dni" readonly></div>
-                        <div class="form-group"><label>CUIL</label><input type="text" id="cuil" name="cuil" readonly></div>
+                        <div class="form-group flex-1"><label>Fecha Nac.</label><input type="date" id="fechaNacimiento" name="fechaNacimiento" readonly></div>
+                        <div class="form-group" style="flex: 0.5;"><label>Edad</label><input type="number" id="edad" name="edad" readonly></div>
+                        <div class="form-group flex-1"><label>DNI</label><input type="text" id="dni" name="dni" readonly></div>
+                        <div class="form-group flex-1"><label>CUIL</label><input type="text" id="cuil" name="cuil" readonly></div>
+                        <div class="form-group flex-1"><label>N° Trámite</label><input type="text" id="numeroTramite" name="numeroTramite" readonly></div>
                     </div>
+                    <!-- Segunda línea debajo -->
                     <div class="form-row">
-                        <div class="form-group"><label>Número de Trámite</label><input type="text" id="numeroTramite" name="numeroTramite" readonly></div>
-                        <div class="form-group"><label>Lugar de Internación</label><input type="text" id="lugarInternacion" name="lugarInternacion" readonly></div>
+                        <div class="form-group flex-1"><label>Lugar de Internación</label><input type="text" id="lugarInternacion" name="lugarInternacion" readonly></div>
+                        <div class="form-group flex-2"><label>Alergias</label><input type="text" id="alergias" name="alergias" readonly></div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group full-width"><label>Alergias</label><input type="text" id="alergias" name="alergias" readonly></div>
-                    </div>
-                </div>
             </section>
 
             <!-- SECCIÓN 2: Médica -->
@@ -118,13 +117,11 @@
             <section class="profile-section section-3">
                 <h3><i class="fa-solid fa-folder-open"></i> Datos Administrativos</h3>
                 <div class="form-row">
-                    <div class="form-group"><label>Fecha de Ingreso</label><input type="date" id="fechaIngreso" name="fechaIngreso" readonly></div>
-                    <div class="form-group"><label>Nacionalidad</label><input type="text" id="nacionalidad" name="nacionalidad" readonly></div>
+                    <div class="form-group flex-1"><label>Fecha de Ingreso</label><input type="date" id="fechaIngreso" name="fechaIngreso" readonly></div>
+                    <div class="form-group flex-1"><label>Nacionalidad</label><input type="text" id="nacionalidad" name="nacionalidad" readonly></div>
+                    <div class="form-group flex-2"><label>Domicilio</label><input type="text" id="domicilio" name="domicilio" readonly></div>
                     <!-- CONTENEDOR DE FECHA DE SALIDA (Para Archivados) -->
-                    <div class="form-group hidden" id="divFechaSalida"><label style="color: var(--danger);">Fecha de Salida</label><input type="date" id="fechaSalida" name="fechaSalida" class="warning-text" readonly></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width"><label>Domicilio</label><input type="text" id="domicilio" name="domicilio" readonly></div>
+                    <div class="form-group hidden flex-1" id="divFechaSalida"><label style="color: var(--danger);">Fecha de Salida</label><input type="date" id="fechaSalida" name="fechaSalida" class="warning-text" readonly></div>
                 </div>
             </section>
 
