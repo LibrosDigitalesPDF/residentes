@@ -223,11 +223,11 @@ function addResponsableRow(nombreVal, dniVal, telVal, domVal) {
     if (!container) return;
 
     const row = document.createElement('div');
-    row.className = 'responsable-block'; // Usa el estilo de style.css
+    row.className = 'responsable-block'; 
     
     row.innerHTML = `
         <button type="button" class="btn-remove-resp ${!isEditMode ? 'hidden' : ''}" onclick="this.closest('.responsable-block').remove()" title="Quitar Responsable"><i class="fa-solid fa-trash"></i></button>
-        <div class="form-row" style="margin-right: 40px;">
+        <div class="form-row" style="margin-right: 40px; align-items: flex-end;">
             <div class="form-group flex-2">
                 <label>Nombre del Contacto / Responsable</label>
                 <input type="text" class="resp-nombre" value="${nombreVal}" ${!isEditMode ? 'readonly' : ''}>
@@ -236,8 +236,6 @@ function addResponsableRow(nombreVal, dniVal, telVal, domVal) {
                 <label>DNI</label>
                 <input type="text" class="resp-dni" value="${dniVal}" ${!isEditMode ? 'readonly' : ''}>
             </div>
-        </div>
-        <div class="form-row">
             <div class="form-group flex-1">
                 <label>Teléfono</label>
                 <input type="text" class="resp-tel" value="${telVal}" ${!isEditMode ? 'readonly' : ''}>
