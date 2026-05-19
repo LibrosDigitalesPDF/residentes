@@ -72,6 +72,10 @@ function populateForm(data) {
     // Si existe el campo viejo de domicilio (se mantiene por si acaso)
     if(document.getElementById('domicilio')) document.getElementById('domicilio').value = data.domicilio || '';
 
+    // Cargar IDs de Drive si existen
+    if(document.getElementById('carpetaDrive')) document.getElementById('carpetaDrive').value = data.carpetaDrive || '';
+    if(document.getElementById('imagenDrive')) document.getElementById('imagenDrive').value = data.imagenDrive || '';
+
     // ================= OBRAS SOCIALES DINÁMICAS =================
     const osContainer = document.getElementById('obrasSocialesContainer');
     if (osContainer) {
@@ -175,6 +179,7 @@ function toggleEditMode(enable) {
         inputs.forEach(input => input.removeAttribute('readonly'));
         document.getElementById('btnEdit').classList.add('hidden');
         document.getElementById('btnSave').classList.remove('hidden');
+        if(document.getElementById('btnCancel')) document.getElementById('btnCancel').classList.remove('hidden');
         if(document.getElementById('btnAddOs')) document.getElementById('btnAddOs').classList.remove('hidden');
         if(document.getElementById('btnAddResponsable')) document.getElementById('btnAddResponsable').classList.remove('hidden');
         document.getElementById('btnUploadContainer').classList.remove('hidden');
@@ -185,9 +190,10 @@ function toggleEditMode(enable) {
         inputs.forEach(input => input.setAttribute('readonly', 'true'));
         document.getElementById('btnEdit').classList.remove('hidden');
         document.getElementById('btnUploadContainer').classList.add('hidden');
+        if(document.getElementById('btnCancel')) document.getElementById('btnCancel').classList.add('hidden');
         if(document.getElementById('btnAddOs')) document.getElementById('btnAddOs').classList.add('hidden');
         if(document.getElementById('btnAddResponsable')) document.getElementById('btnAddResponsable').classList.add('hidden');
-        document.getElementById('uploadOverlay').classList.add('hidden');
+        document.getElementById('uploadOverlay') ? document.getElementById('uploadOverlay').classList.add('hidden') : null;
         document.querySelectorAll('.btn-remove-os').forEach(btn => btn.classList.add('hidden'));
         document.querySelectorAll('.btn-remove-resp').forEach(btn => btn.classList.add('hidden'));
     }
@@ -303,6 +309,10 @@ async function saveResident() {
             telefono: respTels[0] || '',
             domicilioResponsable: respDoms[0] || '',
             domicilio: document.getElementById('domicilio') ? document.getElementById('domicilio').value : '',
+            
+            // Enviamos los IDs o links de Drive
+            carpetaDrive: document.getElementById('carpetaDrive') ? document.getElementById('carpetaDrive').value.trim() : '',
+            imagenDrive: document.getElementById('imagenDrive') ? document.getElementById('imagenDrive').value.trim() : '',
             
             fotoUrl: finalFotoUrl
         };
