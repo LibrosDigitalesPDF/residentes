@@ -114,7 +114,7 @@ select { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 
 .birthday-item { font-size: 0.75rem; background: #FFB347; color: white; padding: 4px; border-radius: 4px; margin-bottom: 4px; font-weight: 600; text-align: center; display: block; word-break: break-word; }
 
 /* ======== PROFILE PAGE ======== */
-.profile-container { max-width: 1000px; margin: 2rem auto; padding: 0 20px; }
+.profile-container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
 .profile-actions { display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 1.5rem; }
 .profile-section { background: var(--white); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); }
 .profile-section h3 { margin-bottom: 1.5rem; color: var(--primary-blue); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
@@ -179,10 +179,11 @@ select { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 
 
 .responsable-block {
     position: relative;
-    background: var(--bg-main);
+    background: #f0f4f8; /* CAMBIO: Fondo sutil azulado */
     padding: 20px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
+    border-left: 5px solid var(--primary-blue); /* NUEVO: Línea de color a la izquierda */
     transition: var(--transition);
 }
 
